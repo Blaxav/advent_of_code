@@ -1,5 +1,6 @@
 mod utils;
 mod year_2018;
+mod year_2024;
 
 use aoc_client::get_data;
 use clap::{Parser, Subcommand};
@@ -54,13 +55,14 @@ async fn main() {
 fn solve(year: u64, day: u64, data: Option<String>) {
     let data_path = match data {
         Some(data) => data,
-        None => format!("./data/{}.txt", day),
+        None => format!("./data/{}/{}.txt", year, day),
     };
 
     println!("Taking data at {}", data_path);
 
     match year {
         2018 => year_2018::run(day, &data_path),
+        2024 => year_2024::run(day, &data_path),
         _ => println!("Year {} not implemented yet", year),
     };
 }
