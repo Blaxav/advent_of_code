@@ -54,7 +54,13 @@ async fn main() {
 
 fn solve(year: u64, day: u64, data: Option<String>) {
     let data_path = match data {
-        Some(data) => data,
+        Some(data) => {
+            if data == "test" {
+                format!("./data/{}/test.txt", year)
+            } else {
+                data
+            }
+        }
         None => format!("./data/{}/{}.txt", year, day),
     };
 
