@@ -1,6 +1,6 @@
 use crate::utils::read_file;
-use rayon::prelude::*;
 use std::collections::HashSet;
+use std::time::Instant;
 
 pub fn run(filepath: &str) -> () {
     match read_file(filepath) {
@@ -78,7 +78,7 @@ fn part_1(data: &Vec<Vec<char>>) -> () {
     println!("Part 1: {}", observed.len());
 }
 
-fn does_loop(data: &Vec<Vec<char>>, obstacle: (i32, i32)) -> bool {
+fn does_loop(data: &Vec<Vec<char>>, obstacle: (i32, i32)) -> (bool, HashSet<(i32, i32)>) {
     let width = data[0].len() as i32;
     let height = data.len() as i32;
 
@@ -90,7 +90,17 @@ fn does_loop(data: &Vec<Vec<char>>, obstacle: (i32, i32)) -> bool {
     loop {
         if !is_inside(x + dx, y + dy, width, height) {
             // If next is outside, does not loop
-            return false;
+            // Returns false, along with the list of positions where we could put an osbstable
+            // to break the current path and create a loop
+            return (
+                false,
+                observed
+                    .into_iter()
+                    .fold(HashSet::new(), |mut acc, (x, y, _, _)| {
+                        acc.insert((x, y));
+                        acc
+                    }),
+            );
         } else if data[(y + dy) as usize][(x + dx) as usize] == '#' || (x + dx, y + dy) == obstacle
         {
             // If next is a rock, change direction
@@ -101,7 +111,7 @@ fn does_loop(data: &Vec<Vec<char>>, obstacle: (i32, i32)) -> bool {
             y += dy;
             if observed.contains(&(x, y, dx, dy)) {
                 // We're back to a known state, it's a loop !
-                return true;
+                return (true, HashSet::new());
             }
             observed.insert((x, y, dx, dy));
         }
@@ -109,23 +119,26 @@ fn does_loop(data: &Vec<Vec<char>>, obstacle: (i32, i32)) -> bool {
 }
 
 fn part_2(data: &Vec<Vec<char>>) -> () {
-    let width = data[0].len() as i32;
-    let height = data.len() as i32;
+    let now = Instant::now();
 
     let (y, x, _, _) = find_start(data);
     let mut loopers = 0;
 
-    (0..data.len()).into_iter().for_each(|i| {
-        (0..data[0].len()).into_iter().for_each(|j| {
-            // If there is no block and it's not start, can try to pose a block
-            if data[i][j] != '#' && (x, y) != (j as i32, i as i32) {
-                let obstacle = (j as i32, i as i32);
-                if does_loop(data, obstacle) {
-                    loopers += 1;
-                }
+    let (_, obstacles_to_check) = does_loop(data, (x, y));
+
+    obstacles_to_check.into_iter().for_each(|(j, i)| {
+        // If there is no block and it's not start, can try to pose a block
+        if data[i as usize][j as usize] != '#' && (x, y) != (j, i) {
+            let obstacle = (j, i);
+            if does_loop(data, obstacle).0 {
+                loopers += 1;
             }
-        })
+        }
     });
 
-    println!("Part 1: {}", loopers);
+    println!(
+        "Part 2: {} in {:.2}s",
+        loopers,
+        now.elapsed().as_millis() as f64 / 1000.0
+    );
 }
