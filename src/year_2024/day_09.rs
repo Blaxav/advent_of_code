@@ -16,8 +16,6 @@ pub fn run(filepath: &str) -> () {
 }
 
 fn part_1(data: &Vec<u32>) -> () {
-    println!("{:?}", data);
-
     // Commpute the total length of the date representation
     let length = data.iter().fold(0, |acc, val| acc + val);
 
@@ -65,9 +63,14 @@ fn part_1(data: &Vec<u32>) -> () {
     println!("Part 1: {}", res);
 }
 
+///
+/// TODO: This solution should be extended to part 1
+/// Having only a list of ordered holes (being one starting position and a size)
+/// and a list of ordered files (being one starting position and a size)
+/// Iterating over the files in reverse order and updating the result until
+/// all the files have been checked
+///
 fn part_2(data: &Vec<u32>) -> () {
-    println!("{:?}", data);
-
     let mut holes: Vec<(u32, u32)> = Vec::new();
     let mut files: Vec<(u32, u32)> = Vec::new();
     let mut c_pos = 0;
@@ -82,7 +85,7 @@ fn part_2(data: &Vec<u32>) -> () {
 
     let mut res: u128 = 0;
     let mut val: u32 = (data.len() - 1) as u32 / 2;
-    let mut has_fit = false;
+    let mut has_fit: bool;
     for file in files.into_iter().rev() {
         has_fit = false;
         for h in holes.iter_mut() {
