@@ -1,5 +1,4 @@
 use crate::utils::read_file;
-use std::time::Instant;
 
 pub fn run(filepath: &str) -> () {
     match read_file(filepath) {

@@ -1,5 +1,4 @@
 use crate::utils::read_file;
-use std::collections::{HashMap, HashSet};
 
 pub fn run(filepath: &str) -> () {
     match read_file(filepath) {
@@ -10,7 +9,7 @@ pub fn run(filepath: &str) -> () {
 
             let data: Vec<u32> = lines[0].chars().map(|c| c.to_digit(10).unwrap()).collect();
             part_1(&data);
-            part_2(&&data);
+            part_2(&data);
         }
         Err(e) => println!("{}", e),
     }

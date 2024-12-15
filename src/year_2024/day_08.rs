@@ -1,11 +1,10 @@
 use crate::utils::read_file;
 use std::collections::{HashMap, HashSet};
-use std::time::Instant;
 
 struct Map {
     width: usize,
     height: usize,
-    data: Vec<Vec<char>>,
+    _data: Vec<Vec<char>>,
     // For each antenna char, vec of all positions
     antennas: HashMap<char, Vec<(i32, i32)>>,
 }
@@ -42,7 +41,7 @@ pub fn run(filepath: &str) -> () {
             let map: Map = Map {
                 width: data[0].len(),
                 height: height,
-                data: data,
+                _data: data,
                 antennas: antennas,
             };
             part_1(&map);
