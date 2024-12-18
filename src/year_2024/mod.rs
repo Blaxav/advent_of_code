@@ -10,6 +10,7 @@ mod day_09;
 mod day_10;
 mod day_11;
 mod day_12;
+mod day_13;
 
 pub fn run(day: u64, data: &str) {
     match day {
@@ -25,6 +26,7 @@ pub fn run(day: u64, data: &str) {
         10 => day_10::run(data),
         11 => day_11::run(data),
         12 => day_12::run(data),
+        13 => day_13::run(data),
         _ => println!("Day {} not implemented yet", day),
     }
 }
